@@ -1,3 +1,3 @@
 import Replayer
 
-Replayer.record("test.bin")
+Replayer.record("test.csv")
