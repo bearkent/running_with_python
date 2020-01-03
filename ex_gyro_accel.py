@@ -11,16 +11,15 @@ while True:
   x = acceleration['x']
   y = acceleration['y']
   z = acceleration['z']
-
-  #x=x*360
-  #y=y*360
-  #z=z*360
-
   print("x={0}, y={1}, z={2}".format(x, y, z))
-  
+
   o = sense.get_orientation()
   pitch = o["pitch"]
   roll = o["roll"]
   yaw = o["yaw"]
   print("pitch {0} roll {1} yaw {2}".format(pitch, roll, yaw))
-  time.sleep(2)
+
+  time.sleep(1)
+
+  
+  
