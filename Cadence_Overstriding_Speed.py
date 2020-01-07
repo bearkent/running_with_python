@@ -47,7 +47,7 @@ def Cadence2(t,ax,ay,az,x,y,z):
     plastx = plastx+vlastx*dt
     plasty = plasty+vlasty*dt
     plastz = plastz+vlastz*dt
-    tlast = t
+    # tlast = t
     #print(dt,y,vlasty,plasty,vlasty*vlasty_old)
 
     if leftRange == False and y < -0.97:
@@ -57,11 +57,12 @@ def Cadence2(t,ax,ay,az,x,y,z):
         #print("checking for step")
         if leftRange:
             print("step")
+            print(dt)
             cadence = 60/dt
             print(cadence)
             leftRange = False
-
-        tlast = t
+            tlast = t
+    
 
 
 if __name__ == "__main__":
