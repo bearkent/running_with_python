@@ -1,10 +1,8 @@
-from sense_hat import SenseHat
-import time
+import Replayer
 
-sense = SenseHat()
+def body_tilt(t,ax,ay,az,x,y,z):
+    body_lean = ay-270
+    print(body_lean)
 
-while True:
-    o = sense.get_orientation()
-    pitch = o["pitch"]
-    d=open("Aftter_Run_Data.bin","wb")
-    d.write()
+if __name__ == "__main__":
+    Replayer.live(body_tilt)
