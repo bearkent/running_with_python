@@ -52,8 +52,6 @@ def fx(t,ax,ay,az,x,y,z):
 def data_collection(fx):
     live(fx)
 
-thread1 = threading.Thread(target=data_collection, args=(fx,))
-
 def audio_running(dic1,dic2,dic3):
     
     if dic1 < 180:
@@ -74,3 +72,11 @@ def audio_running(dic1,dic2,dic3):
     if dic3:
         os.system("mpg321 overstriding2.mp3")
 
+thread1 = threading.Thread(target=data_collection, args=(fx,))
+thread2 = threading.Thread(target= audio_running, args=(dic1,dic2,dic3,))
+
+thread1.start()
+thread2.start()
+
+thread1.join()
+thread2.join()
