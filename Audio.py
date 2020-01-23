@@ -1,4 +1,11 @@
 import os
+import pyttsx3
+
+engine = pyttsx3.init()
+
+def speed_audio(s):
+    engine.say(s)
+    engine.runAndWait()
 
 def heel_strike_audio():
     os.system('mpg321 heel_striking.mp3')
