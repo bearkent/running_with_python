@@ -4,7 +4,7 @@ import pyttsx3
 engine = pyttsx3.init()
 
 def speed_audio(s):
-    engine.say(s)
+    engine.say(str(s))
     engine.runAndWait()
 
 def heel_strike_audio():

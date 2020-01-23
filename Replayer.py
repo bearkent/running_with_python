@@ -1,6 +1,28 @@
 from sense_hat import SenseHat
 import time
 import csv
+import gps
+import pyttsx3
+
+engine = pyttsx3.init()
+
+session = gps.gps("localhost", "2947")
+session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+ 
+while True:
+    try:
+        report = session.next()
+        if report['class'] == 'TPV':
+            if hasattr(report, 'speed'):
+                s = report.speed
+                s = round(s)
+                print(s)
+    except KeyError:
+        pass
+    except KeyboardInterrupt:
+        quit()
+    except StopIteration:
+        session = None
 
 def record(file):
     red=(255,0,0)
@@ -25,7 +47,8 @@ def record(file):
             x = acceleration['x']
             y = acceleration['y']
             z = acceleration['z']
-            writer.writerow([t,ax,ay,az,x,y,z])
+            s = round(report.speed)
+            writer.writerow([t,s,ax,ay,az,x,y,z])
 
             events = sense.stick.get_events()
 
@@ -46,7 +69,8 @@ def replay(file, fx):
             x = float(row[4])
             y = float(row[5])
             z = float(row[6])
-            fx(t,ax,ay,az,x,y,z)
+            s = int(row[7])
+            fx(t,s,ax,ay,az,x,y,z)
 
 def live(fx):
     sense = SenseHat()
@@ -61,4 +85,5 @@ def live(fx):
         x = acceleration['x']
         y = acceleration['y']
         z = acceleration['z']
-        fx(t,ax,ay,az,x,y,z)
+        s = round(report.speed)
+        fx(t,s,ax,ay,az,x,y,z)
