@@ -6,8 +6,19 @@ import time
 
 engine = pyttsx3.init()
 
-def speed(t,s,ax,ay,az,x,y,z): 
-    global engine
+session = gps.gps("localhost", "2947")
+session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+
+def speed(t,s,ax,ay,az,x,y,z):
+
+    #session = gps.gps("localhost", "2947")
+    #session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+
+    global engine,session
+    session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+    session = gps.gps("localhost", "2947")
+    session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+
 
     session = gps.gps("localhost", "2947")
     session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
@@ -22,7 +33,10 @@ def speed(t,s,ax,ay,az,x,y,z):
                 if hasattr(report, 'speed'):
                     print(report.speed)
                     report.speed=s
-                    s = round(s)
+                    #s = round(s)      
+                    engine.say(s)
+                    engine.runAndWait()
+
         except KeyError:
             pass
         except KeyboardInterrupt:
@@ -31,7 +45,8 @@ def speed(t,s,ax,ay,az,x,y,z):
             session = None
             print("GPSD has terminated")
 
-    Audio.speed_audio(s)
+        engine.say(s)
+        engine.runAndWait()
 
 if __name__ == "__main__":
     Replayer.live(speed)

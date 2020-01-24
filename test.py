@@ -3,15 +3,12 @@
 
 #for i in range(0,5):
 #   print(i)
+import Replayer
 
-i = set()
+s = Replayer.speed_for_replayer
 
-print(i)
+#s = str(s)
 
-i.union(("0"))
+s = bytes.fromhex(str(s)).decode('ascii')
 
-print(i)
-
-i.union(("2"))
-
-print(i)
+print(s)

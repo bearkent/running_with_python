@@ -4,18 +4,19 @@ import csv
 import gps
 import pyttsx3
 
-engine = pyttsx3.init()
-
 session = gps.gps("localhost", "2947")
-session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
- 
-while True:
+#session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+
+def speed_for_replayer():
+
+    global session
+
     try:
+        session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
         report = session.next()
         if report['class'] == 'TPV':
             if hasattr(report, 'speed'):
                 s = report.speed
-                s = round(s)
                 print(s)
     except KeyError:
         pass
@@ -47,7 +48,7 @@ def record(file):
             x = acceleration['x']
             y = acceleration['y']
             z = acceleration['z']
-            s = round(report.speed)
+            s = speed_for_replayer()
             writer.writerow([t,s,ax,ay,az,x,y,z])
 
             events = sense.stick.get_events()
@@ -69,7 +70,7 @@ def replay(file, fx):
             x = float(row[4])
             y = float(row[5])
             z = float(row[6])
-            s = int(row[7])
+            s = float(row[7])
             fx(t,s,ax,ay,az,x,y,z)
 
 def live(fx):
@@ -85,5 +86,5 @@ def live(fx):
         x = acceleration['x']
         y = acceleration['y']
         z = acceleration['z']
-        s = round(report.speed)
+        s = speed_for_replayer()
         fx(t,s,ax,ay,az,x,y,z)
