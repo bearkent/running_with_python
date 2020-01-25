@@ -3,12 +3,6 @@
 
 #for i in range(0,5):
 #   print(i)
-import Replayer
+mydict = {"hi":1}
 
-s = Replayer.speed_for_replayer
-
-#s = str(s)
-
-s = bytes.fromhex(str(s)).decode('ascii')
-
-print(s)
+print(mydict.keys())

@@ -1,9 +1,11 @@
 import os
 import pyttsx3
 
+engine = pyttsx3.init()
+
 def speed_audio(speed):
-    engine = pyttsx3.init()
-    engine.say(speed)
+    global engine
+    engine.say("speed is {0}.".format(speed))
     engine.runAndWait()
 
 def heel_strike_audio():

@@ -4,12 +4,14 @@ import csv
 import gps
 import pyttsx3
 
-session = gps.gps("localhost", "2947")
+#session = gps.gps("localhost", "2947")
 #session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 
 def speed_for_replayer():
-
     global session
+
+    session = gps.gps("localhost", "2947")
+    session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 
     try:
         session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
@@ -17,7 +19,8 @@ def speed_for_replayer():
         if report['class'] == 'TPV':
             if hasattr(report, 'speed'):
                 s = report.speed
-                print(s)
+                #print(s)
+                return s
     except KeyError:
         pass
     except KeyboardInterrupt:
