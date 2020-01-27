@@ -83,34 +83,35 @@ def output(n):
 
         # now do something with the messages.  This can be really slow, and that
         # doesn't make your data thread slow
-    for m in msgs:
-        print("output: {0} {1}".format(i,m))
-        global sound_vars
-        sound_vars = {}
-        sound_vars.update({m:i})
-        for var in sound_vars:
-            dta = sound_vars
-            key = list(dta.keys())[list(dta.values()).index(i)]
-            val = dta[key]
-
-            if key == 'Body_tilt':
-                if val < 4:
-                    Audio.increase_tilt_audio
-                    dta.clear()
-            elif val > 6:
-                    Audio.decrease_tilt_audio
-                    dta.clear
-            elif key == 'Cadence':
-                if val < 180:
-                    Audio.cadence_audio
-                    dta.clear()
-            elif key == 'speed':
-                Audio.speed_audio
-                dta.clear()
-            else:
+        for m in msgs:
+            print("output: {0} {1}".format(i,m))
+            global sound_vars
+            sound_vars = {}
+            sound_vars.update({i:m})
+            for var in sound_vars:
+                dta = sound_vars
+                var = list(var.keys())[list(var.values()).index(m)]
+                val = dta[var]
+                sound_val = str(val)
                 dta.clear()
 
-        sleep(30)
+                if var == 'Body_tilt':
+                    if sound_val < 4:
+                        Audio.increase_tilt_audio
+                        dta.clear()
+                elif sound_val > 6:
+                        Audio.decrease_tilt_audio
+                        dta.clear
+                elif var == 'Cadence':
+                    if sound_val < 180:
+                        Audio.cadence_audio
+                        dta.clear()
+                elif sound_val == 'speed':
+                    Audio.speed_audio
+                    dta.clear()
+                else:
+                    dta.clear()
+                    sleep(1)
 
 #def audio(b,c,s):
 #    while True:
@@ -124,7 +125,7 @@ def output(n):
 #            Audio.speed_audio
 #            sleep(30)
 #
-ndata = 100
+ndata = 1000000
 noutput = 1000*ndata
 
 threadData = threading.Thread(target=data, args=(ndata,))
