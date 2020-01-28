@@ -12,66 +12,41 @@ import os
 import GPS
 
 engine = pyttsx3.init()
-sense = SenseHat()
-acceleration = sense.get_accelerometer_raw()
-t=time.time_ns()
-o = sense.get_orientation()
-ax = o["pitch"]
-ay = o["roll"]
-az = o["yaw"]
-x = acceleration['x']
-y = acceleration['y']
-z = acceleration['z']
-tlast = 0
-vlastx = 0
-plastx = 0
-vlasty = 0
-plasty = 0
-vlastz = 0
-plastz = 0
-leftRange = True
 
-body_lean = Body_Tilt.body_tilt
-cadence = Cadence_Overstriding_Speed.Cadence
-s = GPS.speed
-#overstriding
+def say(str):
+    global engine
+    engine.say(str)
+    engine.runAndWait()
 
 # lock is used to make sure that only one thread is changing messages at a time
 lock = threading.Lock()
 # messages contains a set of things to do
-messages = {'Body_Tilt':body_lean,'Cadence':cadence,'Speed':s,"Messages":"empty"}
+messages = {}
 
-def data_for_data(fx1,fx2,fx3):
-    global t,s,ax,ay,az,x,y,z
+def fx(messages,lock,t,s,ax,ay,az,x,y,z):
 
-    a = fx1(t,ax,ay,az,x,y,z)
-    b = fx2(t,ax,ay,az,x,y,z)
-    c = fx3(t,s,ax,ay,az,x,y,z)
+    Body_Tilt.body_tilt(messages,lock,t,s,ax,ay,az,x,y,z)
 
-    global l
-    l = []
-    l = l.append(a,b,c)
+    Cadence_Overstriding_Speed.Cadence(messages,lock,t,s,ax,ay,az,x,y,z)
+
+    GPS.speed(messages,lock,t,s,ax,ay,az,x,y,z)
+
+    
 
 # data is the function that generates things to do (messages)
-def data(n):
-    global messages
-    for i in  range(n):
-        m = "MESSAGE-{0}".format(i)
-        print("data: {0}".format(m))
-        # have to get the lock so that only one thread changes messages at a time
-        lock.acquire()
-        messages["Messages"] = m
-        # have to release the lock or the other thread will wait forever on it
-        lock.release()
+def data(fx,messages,lock):
+    live(fx,messages,lock)
 
-def data_for_output(fx1,fx2,fx3):
-    return data(data_for_data(fx1,fx2,fx3))
-
-# output is the function that gets the messages and does something with them
 def output(n):
     global messages
 
-    for i in range(n):
+    snd_strs = {
+        'Body_Tilt':'Your body tilt is {0}.',
+        'Cadence':'Your cadence is {0}.',
+        'Speed':'Your speed is {0} miles per hour.'
+        }
+
+    while True:
         # have to get the lock so that only one thread changes messages at a time
         lock.acquire()
         # making a copy of the messages, which is fast, so that the data thread
@@ -83,35 +58,14 @@ def output(n):
 
         # now do something with the messages.  This can be really slow, and that
         # doesn't make your data thread slow
-        for m in msgs:
-            print("output: {0} {1}".format(i,m))
-            global sound_vars
-            sound_vars = {}
-            sound_vars.update({i:m})
-            for var in sound_vars:
-                dta = sound_vars
-                var = list(var.keys())[list(var.values()).index(m)]
-                val = dta[var]
-                sound_val = str(val)
-                dta.clear()
+        for k,v in msgs.items():
+            fs = snd_strs[k]
+            ss = fs.format(v)
+            print(ss)
+            say(ss)
 
-                if var == 'Body_tilt':
-                    if sound_val < 4:
-                        Audio.increase_tilt_audio
-                        dta.clear()
-                elif sound_val > 6:
-                        Audio.decrease_tilt_audio
-                        dta.clear
-                elif var == 'Cadence':
-                    if sound_val < 180:
-                        Audio.cadence_audio
-                        dta.clear()
-                elif sound_val == 'speed':
-                    Audio.speed_audio
-                    dta.clear()
-                else:
-                    dta.clear()
-                    sleep(1)
+        sleep(3)
+
 
 #def audio(b,c,s):
 #    while True:
@@ -128,7 +82,7 @@ def output(n):
 ndata = 1000000
 noutput = 1000*ndata
 
-threadData = threading.Thread(target=data, args=(ndata,))
+threadData = threading.Thread(target=data, args=(fx,messages,lock,))
 threadData.start()
 
 threadOutput = threading.Thread(target=output, args=(noutput,))

@@ -1,6 +1,7 @@
 import Replayer
 from time import time
 from time import sleep
+import threading
 
 tlast = 0
 vlastx = 0
@@ -11,7 +12,7 @@ vlastz = 0
 plastz = 0
 leftRange = True
 
-def Cadence(t,ax,ay,az,x,y,z):
+def Cadence(messages,lock,t,s,ax,ay,az,x,y,z):
     global tlast, vlastx,plastx,vlasty,plasty,vlastz,plastz,leftRange
 
     if tlast == 0:
@@ -36,6 +37,11 @@ def Cadence(t,ax,ay,az,x,y,z):
             print(cadence)
             leftRange = False
             tlast = t
+
+            if cadence < 175:
+                lock.acquire()
+                messages['Cadence'] = cadence
+                lock.release() 
     
 def overstriding(t,ax,ay,az,x,y,z):
     global tlast, vlastx,plastx,vlasty,plasty,vlastz,plastz,leftRange
@@ -67,4 +73,6 @@ def overstriding(t,ax,ay,az,x,y,z):
 
 
 if __name__ == "__main__":
-    Replayer.live(Cadence)
+    messages = {}
+    lock = threading.Lock()
+    Replayer.live(Cadence,messages,lock)
