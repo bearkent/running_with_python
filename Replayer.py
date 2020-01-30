@@ -18,7 +18,9 @@ def record(file):
     sense.stick.wait_for_event()
 
     sense.show_letter("R",text_colour=red,back_colour=white)
-    
+    sense.stick.wait_for_event()
+
+    event = sense.stick.wait_for_event()
 
     with open(file,"w") as f:
         writer = csv.writer(f)
@@ -34,7 +36,7 @@ def record(file):
             x = acceleration['x']
             y = acceleration['y']
             z = acceleration['z']
-            s = GPS.speed
+            s = GPS.speed(messages,lock,t,ax,ay,az,x,y,z)
             writer.writerow([messages,lock,t,s,ax,ay,az,x,y,z])
 
             events = sense.stick.get_events()
@@ -72,5 +74,5 @@ def live(fx, messages, lock):
         x = acceleration['x']
         y = acceleration['y']
         z = acceleration['z']
-        s = GPS.speed
+        s = GPS.speed(messages,lock,t,ax,ay,az,x,y,z)
         fx(messages,lock,t,s,ax,ay,az,x,y,z)

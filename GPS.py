@@ -8,7 +8,7 @@ import threading
 session = gps.gps("localhost", "2947")
 session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
 
-def speed(messages,lock,t,s,ax,ay,az,x,y,z):
+def speed(messages,lock,t,ax,ay,az,x,y,z):
 
     #session = gps.gps("localhost", "2947")
     #session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
@@ -33,6 +33,8 @@ def speed(messages,lock,t,s,ax,ay,az,x,y,z):
             if hasattr(report, 'speed'):
                 print(report.speed)
                 s = report.speed
+                
+                return s
 
                 lock.acquire()
                 messages['Speed'] = s

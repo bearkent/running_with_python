@@ -2,7 +2,8 @@ import Replayer
 import threading
 
 def body_tilt(messages,lock,t,s,ax,ay,az,x,y,z):
-    body_lean = 90-ay
+    body_lean = ay-270
+    round(body_lean)
     print(body_lean)
 
     if body_lean > 10 or body_lean < 0:

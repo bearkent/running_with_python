@@ -29,7 +29,7 @@ def fx(messages,lock,t,s,ax,ay,az,x,y,z):
 
     Cadence_Overstriding_Speed.Cadence(messages,lock,t,s,ax,ay,az,x,y,z)
 
-    GPS.speed(messages,lock,t,s,ax,ay,az,x,y,z)
+    GPS.speed(messages,lock,t,ax,ay,az,x,y,z)
 
     
 
