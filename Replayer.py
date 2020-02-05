@@ -44,7 +44,7 @@ def record(file):
             for event in events:
                 if event.action == "pressed":
                     sense.clear()
-                    return
+                    break
 
 
 def replay(file, fx, messages, lock):

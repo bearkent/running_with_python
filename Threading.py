@@ -24,7 +24,7 @@ lock = threading.Lock()
 messages = {}
 
 def fx(messages,lock,t,s,ax,ay,az,x,y,z):
-
+    #info for threading functions
     Body_Tilt.body_tilt(messages,lock,t,s,ax,ay,az,x,y,z)
 
     Cadence_Overstriding_Speed.Cadence(messages,lock,t,s,ax,ay,az,x,y,z)
@@ -37,8 +37,7 @@ def fx(messages,lock,t,s,ax,ay,az,x,y,z):
 def data(fx,messages,lock):
     live(fx,messages,lock)
 
-def output(n):
-    global messages
+def output(n,messages,lock):
 
     snd_strs = {
         'Body_Tilt':'Your body tilt is {0}.',
@@ -59,33 +58,23 @@ def output(n):
         # now do something with the messages.  This can be really slow, and that
         # doesn't make your data thread slow
         for k,v in msgs.items():
+            print("{0},{1}".format(k,v))
             fs = snd_strs[k]
             ss = fs.format(v)
             print(ss)
             say(ss)
 
+        #change to 30 for after stem fair
         sleep(3)
 
 
-#def audio(b,c,s):
-#    while True:
-#        if b > 5:
-#            Audio.decrease_tilt_audio
-#        elif b < 5:
-#            Audio.increase_tilt_audio
-#        elif c < 180:
-#            Audio.cadence_audio
-#        else:
-#            Audio.speed_audio
-#            sleep(30)
-#
 ndata = 1000000
 noutput = 1000*ndata
 
 threadData = threading.Thread(target=data, args=(fx,messages,lock,))
 threadData.start()
 
-threadOutput = threading.Thread(target=output, args=(noutput,))
+threadOutput = threading.Thread(target=output, args=(noutput,messages,lock,))
 threadOutput.start()
 
 threadData.join()
